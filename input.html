@@ -1,0 +1,76 @@
+<form action="result.html" id="inputForm">
+	<input type="text" name="textInput">
+	<br>
+	<br>
+	<input type="file" name="fileInput">
+	<br>
+	<br>
+	<label>True: <input type="radio" name="radioInput" value="true" checked></label>
+	<label>False: <input type="radio" name="radioInput" value="false"></label>
+	<br>
+	<br>
+	<select name="selectInput">
+		<option value="option1">Option 1</option>
+		<option value="option2">Option 2</option>
+	</select>
+	<br>
+	<br>
+	<input type="submit" name="submit" disabled>
+</form>
+<script>
+	var form = document.getElementById("inputForm"),
+		fileInput = form.fileInput,
+		submit = form.submit;
+
+	//clear out old data from localStorage,
+	//more on what localStorage is below
+	localStorage.clear();
+
+	//grab the file contents once the user selects a file, indicated by the "change" event
+	fileInput.addEventListener("change", function (event) {
+		var file = event.target.files[0], //the file selected by the user
+			reader = new FileReader();
+
+		//prevent the user from being able to submit while the file is being read
+		submit.disabled = true;
+
+		//the reader onload handler is called after the FileReader finishes reading a file
+		//(in this case the reader starts reading once reader.readAsText() is called)
+		reader.onload = function () {
+
+			//store the file contents in localStorage (temporary storage in the browser,
+			//just a Javascript object that you can add properties to, but it persists
+			//across page loads as long as the tab remains open; normal javascript variables are destroyed when the page reloads).
+			//here, set the "fileContents" property (arbitrary) to the contents of the file
+			//do this so we can access it later on another page
+			localStorage.fileContents = reader.result;
+
+			//unlock the submit button, allow user to submit
+			submit.disabled = false;
+		};
+
+		//read the contents of the file
+		reader.readAsText(file);
+	});
+
+
+	//set up the form submit handler
+	//since we don't have a server for form submission, and we're storing the file contents in localStorage anyway
+	//may as well store the submitted form data there too for consistency
+	form.addEventListener("submit", function (event) {
+
+		//we call event.preventDefault() to stop the browser from doing it's normal form submission thing
+		event.preventDefault();
+
+		//store the form data in localStorage
+		//we can access the inputs of the form by their name attribute
+		localStorage.textInput = form.textInput.value;
+		localStorage.fileInput = form.fileInput.value; //we actually don't care about this one, it's just the name of the file
+		localStorage.radioInput = form.radioInput.value;
+		localStorage.selectInput = form.selectInput.value;
+
+		//now we can do part of what the browser would have done anyway (wihtout the preventDefault() call above):
+		//namely, go to the page specified by the form action attribute
+		window.open(form.action, '_blank');
+	});
+</script>
