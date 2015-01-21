@@ -1,10 +1,37 @@
 <form action="result.html" id="inputForm">
-	<input type="text" name="textInput">
-	<br>
+	gcode:
 	<br>
 	<input type="file" name="fileInput">
 	<br>
 	<br>
+	center:
+	<br>
+	x <input type="text" name="centx">
+	<br>
+	y <input type="text" name="centy">
+	<br>
+	z <input type="text" name="centz">
+	<br>
+	<br>
+	box size:
+	<br>
+	x <input type="text" name="boxx">
+	<br>
+	y <input type="text" name="boxy">
+	<br>
+	z <input type="text" name="boxz">
+	<br>
+	<br>
+	resolution:
+	<br>
+	x <input type="text" name="resx">
+	<br>
+	y <input type="text" name="resy">
+	<br>
+	z <input type="text" name="resz">
+	<br>
+	<br>
+	<!--
 	<label>True: <input type="radio" name="radioInput" value="true" checked></label>
 	<label>False: <input type="radio" name="radioInput" value="false"></label>
 	<br>
@@ -15,6 +42,7 @@
 	</select>
 	<br>
 	<br>
+	-->
 	<input type="submit" name="submit" disabled>
 </form>
 <script>
@@ -27,7 +55,8 @@
 	localStorage.clear();
 
 	//grab the file contents once the user selects a file, indicated by the "change" event
-	fileInput.addEventListener("change", function (event) {
+	fileInput.addEventListener("change", function (event) 
+	{
 		var file = event.target.files[0], //the file selected by the user
 			reader = new FileReader();
 
@@ -64,11 +93,20 @@
 
 		//store the form data in localStorage
 		//we can access the inputs of the form by their name attribute
-		localStorage.textInput = form.textInput.value;
+		function vecop(x,y,z,fun){return JSON.stringify([fun(x),fun(y),fun(z)])};
+		localStorage.cent =	vecop(form.centx.value,	form.centy.value,	form.centz.value,	parseFloat);
+		localStorage.box = 	vecop(form.boxx.value,	form.boxy.value,	form.boxz.value,	parseFloat);
+		localStorage.res = 	vecop(form.resx.value,	form.resy.value,	form.resz.value,	parseInt);
+		
+		
+		
 		localStorage.fileInput = form.fileInput.value; //we actually don't care about this one, it's just the name of the file
+		
+		/*
 		localStorage.radioInput = form.radioInput.value;
 		localStorage.selectInput = form.selectInput.value;
-
+		*/
+		
 		//now we can do part of what the browser would have done anyway (wihtout the preventDefault() call above):
 		//namely, go to the page specified by the form action attribute
 		window.open(form.action, '_blank');
