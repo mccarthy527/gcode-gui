@@ -19,7 +19,7 @@ console.log(localStorage.box[1])
 
 
 
-/*
+
 var mymesh = isosurface.surfaceNets(resolution, implicitwrapper, bounds )
 var shell = require("mesh-viewer")()
 var mesh
@@ -34,4 +34,3 @@ shell.on("viewer-init", function() {
 shell.on("gl-render", function() {
   mesh.draw()
 })
-*/
